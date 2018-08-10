@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Forebot2.Model;
+using System;
 using System.Diagnostics;
 using System.Threading;
 
@@ -7,6 +8,11 @@ namespace Forebot2
     /// <summary>The main program class for this application.</summary>
     class Program
     {
+        /// <summary>Refference to the Model Root of this application.</summary>
+        private static readonly BotModel mdl = BotModel.Instance;
+
+
+
         /// <summary>The main starting point of any application.</summary>
         /// <remarks>If you had to read this to figure out what main is.....git gud scrub.</remarks>
         /// <param name="args">Arguments passed in to the application, from the command line, or shortcut.</param>
@@ -22,10 +28,10 @@ namespace Forebot2
 
 
             Console.WriteLine("Hello World!");
+            Console.WriteLine("Test - Value in model: " + mdl.sTestString);
             Console.ReadKey();
 
         }
-
 
         /// <summary>Check if this application is already running.</summary>
         /// <returns>TRUE if application is already running, FALSE otherwise</returns>
