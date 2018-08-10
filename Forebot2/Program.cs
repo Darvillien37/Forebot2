@@ -1,7 +1,6 @@
 ﻿using Forebot2.Model;
 using System;
 using System.Diagnostics;
-using System.Threading;
 
 namespace Forebot2
 {
