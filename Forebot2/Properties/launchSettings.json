@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Forebot2": {
+      "commandName": "Project",
+      "commandLineArgs": "freshCnfg=true"
+    }
+  }
+}

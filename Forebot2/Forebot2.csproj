@@ -10,6 +10,8 @@
     <NeutralLanguage>en-GB</NeutralLanguage>
     <RepositoryType></RepositoryType>
     <PackageTags></PackageTags>
+    <ApplicationIcon />
+    <StartupObject></StartupObject>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

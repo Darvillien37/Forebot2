@@ -14,9 +14,14 @@ namespace Forebot2.Model
         /// <summary>Private constructor, part of singleton design pattern.</summary>
         private BotModel()
         { }
-        
 
+        public string sConfigFileDirectory = @".\";
+        public readonly string sConfigFileName = "Forebot.cfg";
+        public string sConfigFilePath;
+        public bool bCreateFreshConfig = false;
 
+        public readonly string[] sTrueStrings = { "Y", "YES", "T", "TRUE" };
+        public readonly string[] sFalseStrings = { "N", "NO", "F", "FALSE" };
 
         public string sTestString = "Test String in the model";
 
