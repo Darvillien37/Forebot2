@@ -141,7 +141,7 @@ namespace Forebot2
         /// <summary>Initialise a fresh config file at <see cref="sConfigFilePath"/>.</summary>        
         private static void InitialiseFreshConfigfile()
         {
-            Console.WriteLine("Creating Fresh Config File at " + mdl.sConfigFileDirectory);
+            Console.WriteLine("Creating Fresh Config File at " + mdl.sConfigFilePath);
             if (!Directory.Exists(mdl.sConfigFileDirectory))// If the directory does not exist...
             {
                 Console.WriteLine("Config Directory Path does not exist: [" + mdl.sConfigFileDirectory + "]");
@@ -149,7 +149,9 @@ namespace Forebot2
                 Directory.CreateDirectory(mdl.sConfigFileDirectory);// ...Create it
             }
             using (StreamWriter sw = File.CreateText(mdl.sConfigFilePath))// Create a fresh config file template (will also overwrite if one already exists)
-            {                
+            {
+                sw.WriteLine("# Bot Setup:");
+                sw.WriteLine("BOT_TOKEN = Token Here");
                 sw.WriteLine("# Database Setup:");
                 sw.WriteLine("DATABASE_ADDRESS = localhost");
                 sw.WriteLine("DATABASE_NAME = Name Here");

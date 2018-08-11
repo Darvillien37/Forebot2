@@ -20,6 +20,9 @@ namespace Forebot2.Model
         public string sConfigFilePath;
         public bool bCreateFreshConfig = false;
 
+        public string sBotToken = "N/A";
+
+
         public readonly string[] sTrueStrings = { "Y", "YES", "T", "TRUE" };
         public readonly string[] sFalseStrings = { "N", "NO", "F", "FALSE" };
 
