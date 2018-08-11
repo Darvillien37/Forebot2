@@ -15,6 +15,7 @@ namespace Forebot2.Model
         private BotModel()
         { }
 
+        public readonly char cConfigFileCommentChar = '#';
         public string sConfigFileDirectory = @".\";
         public readonly string sConfigFileName = "Forebot.cfg";
         public string sConfigFilePath;

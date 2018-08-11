@@ -29,7 +29,7 @@ namespace Forebot2
                 Console.WriteLine("Shutting down this instance ... Goodbye!!");
                 return; //returning in main exits the applicaiton.
             }
-            
+
             //Initialising:
             ProcessArgs(args);
             Console.WriteLine();
@@ -131,10 +131,46 @@ namespace Forebot2
                 InitialiseFreshConfigfile();// initialise a fresh one.
             }
 
+            string[] sLinesFromFile;
+
+            try
+            {
+                sLinesFromFile = File.ReadAllLines(mdl.sConfigFilePath);
+            }
+            catch (Exception e)
+            {
+                Console.Write("Exception when reading configuration file: " + e.Message);
+                return false;
+            }
+
+            for (int i = 0; i < sLinesFromFile.Length; i++)
+            {
+                Console.WriteLine("Processing line " + i + ": " + sLinesFromFile[i]);
+                if (!ProcessConfigLine(sLinesFromFile[i])) //If the line isnt valid, return false.
+                    return false;
+
+            }
+
             //ToDo: read in the config file and store values in model.
             //If a config line is invalid return false.
 
             Console.WriteLine("Config Processing Compleate");
+            return true;
+        }
+
+        /// <summary>Process a line from the config file.</summary>
+        /// <param name="lineFromFile">A line from the file.</param>
+        /// <returns>True if a valid line, false otherwise.</returns>
+        private static bool ProcessConfigLine(string lineFromFile)
+        {
+            lineFromFile = lineFromFile.Trim(); //Remove the spaces from the start and end of the line.
+
+            if (lineFromFile[0] == mdl.cConfigFileCommentChar) //Check if the line is a comment.
+            {
+                Console.WriteLine("Commented line found - ignoring...");
+                return true; //Return true, as a commented line is a valid line.
+            }
+
             return true;
         }
 
@@ -150,13 +186,15 @@ namespace Forebot2
             }
             using (StreamWriter sw = File.CreateText(mdl.sConfigFilePath))// Create a fresh config file template (will also overwrite if one already exists)
             {
-                sw.WriteLine("# Bot Setup:");
-                sw.WriteLine("BOT_TOKEN = Token Here");
+                sw.WriteLine(mdl.cConfigFileCommentChar + " Any lines that start with '" + mdl.cConfigFileCommentChar + "' will be ignored");
+                sw.WriteLine(mdl.cConfigFileCommentChar + " Please do not change the values in front of the '='.");
+                sw.WriteLine(mdl.cConfigFileCommentChar + " Bot Setup:");
+                sw.WriteLine("BOT_TOKEN =           Token Here");
                 sw.WriteLine("# Database Setup:");
-                sw.WriteLine("DATABASE_ADDRESS = localhost");
-                sw.WriteLine("DATABASE_NAME = Name Here");
-                sw.WriteLine("DATABASE_USERNAME = Username here");
-                sw.WriteLine("DATABASE_PASSWORD = Password here");
+                sw.WriteLine("DATABASE_ADDRESS =    localhost");
+                sw.WriteLine("DATABASE_NAME =       Name Here");
+                sw.WriteLine("DATABASE_USERNAME =   Username here");
+                sw.WriteLine("DATABASE_PASSWORD =   Password here");
             }
             Console.WriteLine("Fresh Config file created");
         }
