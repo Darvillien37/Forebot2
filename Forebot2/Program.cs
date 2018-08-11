@@ -13,7 +13,7 @@ namespace Forebot2
         const string ARG_CONFIG_DIRECTORY_KEY = "cnfgDir";
         const string ARG_CREATE_FRESH_CONFIG = "freshCnfg";
 
-        /// <summary>Refference to the Model Root of this application.</summary>
+        /// <summary>Reference to the Model Root of this application.</summary>
         private static readonly BotModel mdl = BotModel.Instance;
 
 
@@ -22,12 +22,12 @@ namespace Forebot2
         /// <param name="args">Arguments passed in to the application, from the command line, or shortcut.</param>
         static void Main(string[] args)
         {
-            //Check if this applicaiton is already running...
+            //Check if this application is already running...
             if (IsApplicationAlreadyRunning())
             {//...if it is, shut this instance down.
                 Console.WriteLine("Only one instance of " + Process.GetCurrentProcess().ProcessName + " Can be run a a time.");
                 Console.WriteLine("Shutting down this instance ... Goodbye!!");
-                return; //returning in main exits the applicaiton.
+                return; //returning in main exits the application.
             }
 
             //Initialising:
@@ -51,11 +51,11 @@ namespace Forebot2
         /// <returns>TRUE if application is already running, FALSE otherwise</returns>
         private static bool IsApplicationAlreadyRunning()
         {
-            string sProcessName = Process.GetCurrentProcess().ProcessName;
-            if (Process.GetProcessesByName(sProcessName).Length > 1)
-                return true;
+            string sProcessName = Process.GetCurrentProcess().ProcessName; //Get the current process name
+            if (Process.GetProcessesByName(sProcessName).Length > 1) //Get a list of all processes running on this machine, that contain this processes name.
+                return true;//If the list is bigger than 1, the 1 being this current process, then the application is already running.
             else
-                return false;
+                return false;//Otherwise it isn't.
         }
 
         /// <summary>Process the arguments passed in to the application.</summary>
@@ -92,12 +92,12 @@ namespace Forebot2
 
                         if (mdl.sTrueStrings.Contains(createFresh))
                         {
-                            Console.WriteLine("Creating fresh Config file on startup");
+                            Console.WriteLine("Creating fresh Config file on start-up");
                             mdl.bCreateFreshConfig = true;
                         }
                         else if (mdl.sFalseStrings.Contains(createFresh))
                         {
-                            Console.WriteLine("Not creating fresh Config file on startup");
+                            Console.WriteLine("Not creating fresh Config file on start-up");
                             mdl.bCreateFreshConfig = false;
                         }
                         else
@@ -115,16 +115,16 @@ namespace Forebot2
                 }
 
             }
-            Console.WriteLine("Arguments Processing Compleate");
+            Console.WriteLine("Arguments Processing Complete");
         }
 
         /// <summary>Process the config file. Can also Initialise a fresh file if <see cref="mdl.bCreateFreshConfig"/>.</summary>
         /// <returns>TRUE if a valid config file, FALSE otherwise.</returns>
         private static bool ProcessConfigFile()
         {
-            Console.WriteLine("Prosessing Config File....");
+            Console.WriteLine("Processing Config File....");
 
-            mdl.sConfigFilePath = Path.Combine(mdl.sConfigFileDirectory, mdl.sConfigFileName);// Combine the dirctroy and file name to a valid path.
+            mdl.sConfigFilePath = Path.Combine(mdl.sConfigFileDirectory, mdl.sConfigFileName);// Combine the directory and file name to a valid path.
 
             if (mdl.bCreateFreshConfig)//If instructed to create a fresh config file...
             {
@@ -146,7 +146,7 @@ namespace Forebot2
             for (int i = 0; i < sLinesFromFile.Length; i++)
             {
                 Console.WriteLine("Processing line " + i + ": " + sLinesFromFile[i]);
-                if (!ProcessConfigLine(sLinesFromFile[i])) //If the line isnt valid, return false.
+                if (!ProcessConfigLine(sLinesFromFile[i])) //If the line isn't valid, return false.
                     return false;
 
             }
@@ -154,7 +154,7 @@ namespace Forebot2
             //ToDo: read in the config file and store values in model.
             //If a config line is invalid return false.
 
-            Console.WriteLine("Config Processing Compleate");
+            Console.WriteLine("Config Processing Complete");
             return true;
         }
 
@@ -188,9 +188,9 @@ namespace Forebot2
             {
                 sw.WriteLine(mdl.cConfigFileCommentChar + " Any lines that start with '" + mdl.cConfigFileCommentChar + "' will be ignored");
                 sw.WriteLine(mdl.cConfigFileCommentChar + " Please do not change the values in front of the '='.");
-                sw.WriteLine(mdl.cConfigFileCommentChar + " Bot Setup:");
+                sw.WriteLine(mdl.cConfigFileCommentChar + " Bot Set-up:");
                 sw.WriteLine("BOT_TOKEN =           Token Here");
-                sw.WriteLine("# Database Setup:");
+                sw.WriteLine("# Database Set-up:");
                 sw.WriteLine("DATABASE_ADDRESS =    localhost");
                 sw.WriteLine("DATABASE_NAME =       Name Here");
                 sw.WriteLine("DATABASE_USERNAME =   Username here");
