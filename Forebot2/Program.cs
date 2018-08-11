@@ -11,8 +11,7 @@ namespace Forebot2
     {
         const string ARG_FORMAT_EXAMPLE = "[key]=[value]";
         const string ARG_CONFIG_DIRECTORY_KEY = "cnfgDir";
-        const string ARG_CREATE_FRESH_CONFIG = "freshCnfg";
-
+        const string ARG_CREATE_FRESH_CONFIG = "freshCnfg";        
         /// <summary>Reference to the Model Root of this application.</summary>
         private static readonly BotModel mdl = BotModel.Instance;
 
@@ -42,7 +41,7 @@ namespace Forebot2
 
 
             Console.WriteLine("Hello World!");
-            Console.WriteLine("Test - Value in model: " + mdl.sTestString);
+     
             Console.ReadKey();
 
         }
@@ -84,7 +83,7 @@ namespace Forebot2
                 {
                     case ARG_CONFIG_DIRECTORY_KEY:
                         Console.WriteLine("Setting Config directory to: " + sArgSplit[1]);
-                        mdl.sConfigFileDirectory = sArgSplit[1];
+                        mdl.ConfigFile.sDirectory = sArgSplit[1];
                         break;
 
                     case ARG_CREATE_FRESH_CONFIG:
@@ -93,12 +92,12 @@ namespace Forebot2
                         if (mdl.sTrueStrings.Contains(createFresh))
                         {
                             Console.WriteLine("Creating fresh Config file on start-up");
-                            mdl.bCreateFreshConfig = true;
+                            mdl.ConfigFile.bCreateFreshConfig = true;
                         }
                         else if (mdl.sFalseStrings.Contains(createFresh))
                         {
                             Console.WriteLine("Not creating fresh Config file on start-up");
-                            mdl.bCreateFreshConfig = false;
+                            mdl.ConfigFile.bCreateFreshConfig = false;
                         }
                         else
                         {
@@ -124,9 +123,9 @@ namespace Forebot2
         {
             Console.WriteLine("Processing Config File....");
 
-            mdl.sConfigFilePath = Path.Combine(mdl.sConfigFileDirectory, mdl.sConfigFileName);// Combine the directory and file name to a valid path.
+            mdl.ConfigFile.sPath = Path.Combine(mdl.ConfigFile.sDirectory, mdl.ConfigFile.sName);// Combine the directory and file name to a valid path.
 
-            if (mdl.bCreateFreshConfig)//If instructed to create a fresh config file...
+            if (mdl.ConfigFile.bCreateFreshConfig)//If instructed to create a fresh config file...
             {
                 InitialiseFreshConfigfile();// initialise a fresh one.
             }
@@ -135,7 +134,7 @@ namespace Forebot2
 
             try
             {
-                sLinesFromFile = File.ReadAllLines(mdl.sConfigFilePath);
+                sLinesFromFile = File.ReadAllLines(mdl.ConfigFile.sPath);
             }
             catch (Exception e)
             {
@@ -165,7 +164,7 @@ namespace Forebot2
         {
             lineFromFile = lineFromFile.Trim(); //Remove the spaces from the start and end of the line.
 
-            if (lineFromFile[0] == mdl.cConfigFileCommentChar) //Check if the line is a comment.
+            if (lineFromFile[0] == mdl.ConfigFile.cCommentChar) //Check if the line is a comment.
             {
                 Console.WriteLine("Commented line found - ignoring...");
                 return true; //Return true, as a commented line is a valid line.
@@ -177,18 +176,18 @@ namespace Forebot2
         /// <summary>Initialise a fresh config file at <see cref="sConfigFilePath"/>.</summary>        
         private static void InitialiseFreshConfigfile()
         {
-            Console.WriteLine("Creating Fresh Config File at " + mdl.sConfigFilePath);
-            if (!Directory.Exists(mdl.sConfigFileDirectory))// If the directory does not exist...
+            Console.WriteLine("Creating Fresh Config File at " + mdl.ConfigFile.sPath);
+            if (!Directory.Exists(mdl.ConfigFile.sDirectory))// If the directory does not exist...
             {
-                Console.WriteLine("Config Directory Path does not exist: [" + mdl.sConfigFileDirectory + "]");
+                Console.WriteLine("Config Directory Path does not exist: [" + mdl.ConfigFile.sDirectory + "]");
                 Console.WriteLine("Creating Directory... ");
-                Directory.CreateDirectory(mdl.sConfigFileDirectory);// ...Create it
+                Directory.CreateDirectory(mdl.ConfigFile.sDirectory);// ...Create it
             }
-            using (StreamWriter sw = File.CreateText(mdl.sConfigFilePath))// Create a fresh config file template (will also overwrite if one already exists)
+            using (StreamWriter sw = File.CreateText(mdl.ConfigFile.sPath))// Create a fresh config file template (will also overwrite if one already exists)
             {
-                sw.WriteLine(mdl.cConfigFileCommentChar + " Any lines that start with '" + mdl.cConfigFileCommentChar + "' will be ignored");
-                sw.WriteLine(mdl.cConfigFileCommentChar + " Please do not change the values in front of the '='.");
-                sw.WriteLine(mdl.cConfigFileCommentChar + " Bot Set-up:");
+                sw.WriteLine(mdl.ConfigFile.cCommentChar + " Any lines that start with '" + mdl.ConfigFile.cCommentChar + "' will be ignored");
+                sw.WriteLine(mdl.ConfigFile.cCommentChar + " Please do not change the values in front of the '='.");
+                sw.WriteLine(mdl.ConfigFile.cCommentChar + " Bot Set-up:");
                 sw.WriteLine("BOT_TOKEN =           Token Here");
                 sw.WriteLine("# Database Set-up:");
                 sw.WriteLine("DATABASE_ADDRESS =    localhost");
