@@ -29,10 +29,16 @@ namespace Forebot2
                 Console.WriteLine("Shutting down this instance ... Goodbye!!");
                 return; //returning in main exits the applicaiton.
             }
-
+            
+            //Initialising:
             ProcessArgs(args);
             Console.WriteLine();
-            ProcessConfigFile();
+
+            if (!ProcessConfigFile())//Will return false if a config line is invalid.
+            {
+                Console.WriteLine("WARNING - Configuration file is invalid, shutting down.");
+                return;
+            }
 
 
             Console.WriteLine("Hello World!");
@@ -112,33 +118,37 @@ namespace Forebot2
             Console.WriteLine("Arguments Processing Compleate");
         }
 
-        /// <summary>Process the config file, at the spesified file path. 
-        /// Can also Initialise a fresh file if <see cref="mdl.bCreateFreshConfig"/>.</summary>
-        private static void ProcessConfigFile()
+        /// <summary>Process the config file. Can also Initialise a fresh file if <see cref="mdl.bCreateFreshConfig"/>.</summary>
+        /// <returns>TRUE if a valid config file, FALSE otherwise.</returns>
+        private static bool ProcessConfigFile()
         {
             Console.WriteLine("Prosessing Config File....");
 
-            mdl.sConfigFilePath = Path.Combine(mdl.sConfigFileDirectory, mdl.sConfigFileName);
+            mdl.sConfigFilePath = Path.Combine(mdl.sConfigFileDirectory, mdl.sConfigFileName);// Combine the dirctroy and file name to a valid path.
 
-            if (mdl.bCreateFreshConfig)
+            if (mdl.bCreateFreshConfig)//If instructed to create a fresh config file...
             {
-                InitialiseFreshConfigfile();
+                InitialiseFreshConfigfile();// initialise a fresh one.
             }
 
-            Console.Write("Config Processing Compleate");
+            //ToDo: read in the config file and store values in model.
+            //If a config line is invalid return false.
+
+            Console.WriteLine("Config Processing Compleate");
+            return true;
         }
 
         /// <summary>Initialise a fresh config file at <see cref="sConfigFilePath"/>.</summary>        
         private static void InitialiseFreshConfigfile()
         {
-            Console.WriteLine("Creating Fresh Config File....");
-            if (!Directory.Exists(mdl.sConfigFileDirectory))
+            Console.WriteLine("Creating Fresh Config File at " + mdl.sConfigFileDirectory);
+            if (!Directory.Exists(mdl.sConfigFileDirectory))// If the directory does not exist...
             {
                 Console.WriteLine("Config Directory Path does not exist: [" + mdl.sConfigFileDirectory + "]");
                 Console.WriteLine("Creating Directory... ");
-                Directory.CreateDirectory(mdl.sConfigFileDirectory);
+                Directory.CreateDirectory(mdl.sConfigFileDirectory);// ...Create it
             }
-            using (StreamWriter sw = File.CreateText(mdl.sConfigFilePath))
+            using (StreamWriter sw = File.CreateText(mdl.sConfigFilePath))// Create a fresh config file template (will also overwrite if one already exists)
             {                
                 sw.WriteLine("# Database Setup:");
                 sw.WriteLine("DATABASE_ADDRESS = localhost");
@@ -146,6 +156,7 @@ namespace Forebot2
                 sw.WriteLine("DATABASE_USERNAME = Username here");
                 sw.WriteLine("DATABASE_PASSWORD = Password here");
             }
+            Console.WriteLine("Fresh Config file created");
         }
     }
 }
