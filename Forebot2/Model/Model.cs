@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Forebot2.Model
 {
-    /// <summary>Singleton base node of the runtime model/database used by the application. 
+    /// <summary>Singleton root node of the runtime model/database used by the application. 
     /// This class cannot be inherited.</summary>
     public sealed class BotModel
     {

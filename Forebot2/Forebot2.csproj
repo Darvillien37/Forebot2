@@ -25,4 +25,8 @@
     <OutputPath>..\Debug</OutputPath>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Discord\" />
+  </ItemGroup>
+
 </Project>
