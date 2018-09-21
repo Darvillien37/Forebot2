@@ -2,7 +2,7 @@
   "profiles": {
     "Forebot2": {
       "commandName": "Project",
-      "commandLineArgs": "cnfgDir=F:\\ freshCnfg=F"
+      "commandLineArgs": "\"C:\\Users\\Player 2\\Documents\\TestFolder\""
     }
   }
 }

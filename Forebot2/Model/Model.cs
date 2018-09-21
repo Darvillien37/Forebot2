@@ -11,8 +11,7 @@ namespace Forebot2.Model
         /// <summary>Get the instance of the model.</summary>
         public static BotModel Instance { get; } = new BotModel();
 
-        /// <summary>Get the data relating about the config file.</summary>
-        public  ConfigFileData ConfigFile { get; } = new ConfigFileData();
+      
 
         /// <summary>Get the data relating to the bot.</summary>
         public BotData Bot { get; } = new BotData();
@@ -32,26 +31,7 @@ namespace Forebot2.Model
 
     }
 
-    /// <summary>Data relating to the config file, not necessarily the data IN the file, but about it.</summary>
-    public class ConfigFileData
-    {
-        /// <summary>Character used to represent a commented line in the config file.</summary>
-        public readonly char cCommentChar = '#';
-        /// <summary>The name of the config file for the bot.</summary>
-        public readonly string sName = "Forebot.cfg";
-
-        /// <summary>The directory path to find the config file. 
-        /// Defaulted to '.\' (where the application is running from).</summary>
-        public string sDirectory = @".\";
-        /// <summary>The combination of the directory and name of the config file.</summary>
-        public string sPath = "N/A";
-        /// <summary>Used to determine to create a fresh configuration file (in <see cref="sDirectory"/>) on application start.</summary>
-        public bool bCreateFreshConfig = false; //Default to false.
-
-        public ConfigFileData()
-        {
-        }
-    }
+    
 
     /// <summary>Data relating to the bot itself.</summary>
     public class BotData
