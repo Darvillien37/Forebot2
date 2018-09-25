@@ -1,8 +1,7 @@
 ﻿using Forebot2.Model;
 using System;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
+using System.Reflection;
 
 namespace Forebot2
 {
@@ -12,12 +11,18 @@ namespace Forebot2
         /// <summary>Reference to the Model Root of this application.</summary>
         private static readonly BotModel mdl = BotModel.Instance;
 
+        /// <summary>Get the Build Version of the program.</summary>
+        public static string BuildVersion { get { return Assembly.GetExecutingAssembly().GetName().Version.ToString(); } }
+
+     
 
         /// <summary>The main starting point of any application.</summary>
         /// <remarks>If you had to read this to figure out what main is.....git gud scrub.</remarks>
         /// <param name="args">Arguments passed in to the application, from the command line, or shortcut.</param>
         static void Main(string[] args)
         {
+            PrintApplicationInfo();//Print the application info.
+
             //Check if this application is already running...
             if (IsApplicationAlreadyRunning())
             {//...if it is, shut this instance down.
@@ -43,6 +48,13 @@ namespace Forebot2
 
             Console.ReadKey();
 
+        }
+
+        /// <summary>Print the application name and version number.</summary>
+        static private void PrintApplicationInfo()
+        {
+            AssemblyName aName = Assembly.GetExecutingAssembly().GetName();
+            Console.WriteLine("Running: " + aName.Name + "  V" + aName.Version.ToString());
         }
 
         /// <summary>Check if this application is already running.</summary>

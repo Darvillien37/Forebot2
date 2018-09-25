@@ -57,6 +57,7 @@ namespace Forebot2.Model
         { }
     }
 
+    /// <summary>Data relating to the Database itself. Not the data in the database.</summary>
     public class DatabaseData
     {
         /// <summary>The Address of the Database.</summary>

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Forebot2.Model;
+using System;
 using System.IO;
-using System.Text;
-using Forebot2.Model;
 
 namespace Forebot2
 {
