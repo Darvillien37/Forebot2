@@ -15,20 +15,19 @@ namespace Forebot2.Model
 
         /// <summary>Get the data relating to the bot.</summary>
         public BotData Bot { get; } = new BotData();
+        /// <summary>Get the data relating to the database, not the data IN the database.</summary>
+        public DatabaseData Database { get; } = new DatabaseData();
 
         /// <summary>Private constructor, part of singleton design pattern.</summary>
         private BotModel()
         { }
-
-
+        
 
         /// <summary>An array of strings representing acceptable yes/true strings.</summary>
         public readonly string[] sTrueStrings = { "Y", "YES", "T", "TRUE" };
         /// <summary>An array of strings representing acceptable no/false strings.</summary>
         public readonly string[] sFalseStrings = { "N", "NO", "F", "FALSE" };
-
-
-
+        
     }
 
     
@@ -56,7 +55,17 @@ namespace Forebot2.Model
 
         public BotData()
         { }
+    }
 
-
+    public class DatabaseData
+    {
+        /// <summary>The Address of the Database.</summary>
+        public string Address { get; set; } = "localhost";
+        /// <summary>The Name of the database.</summary>
+        public string Name { get; set; } = "NotSet";
+        /// <summary>The Username to enter the database.</summary>
+        public string Username { get; set; } = "NotSet";
+        /// <summary>The Password to enter the database.</summary>
+        public string Password { get; set; } = "NotSet";
     }
 }

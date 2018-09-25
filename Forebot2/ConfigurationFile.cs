@@ -8,6 +8,22 @@ namespace Forebot2
 {
     public class ConfigurationFile
     {
+
+        #region Key Constants for Key-Value pairs
+        /// <summary>Key for the Bot Token.</summary>
+        private const string KEY_BOT_TOKEN = "BOT_TOKEN";
+
+        /// <summary>Key for the Database Address.</summary>
+        private const string KEY_DATABASE_ADDRESS = "DATABASE_ADDRESS";
+        /// <summary>Key for the Database Name.</summary>
+        private const string KEY_DATABASE_NAME = "DATABASE_NAME";
+        /// <summary>Key for the Database Username.</summary>
+        private const string KEY_DATABASE_USERNAME = "DATABASE_USERNAME";
+        /// <summary>Key for the Database Password.</summary>
+        private const string KEY_DATABASE_PASSWORD = "DATABASE_PASSWORD";
+
+        #endregion
+
         /// <summary>Character used to represent a commented line in the config file.</summary>
         private const char COMMENT_CHAR = '#';
         /// <summary>The default directory of the config file.</summary>
@@ -20,7 +36,7 @@ namespace Forebot2
         /// <summary>GET the combination of the directory and name of the config file.</summary>
         public static string FullPath { get { return Path.Combine(Location, Name); } }
 
-        /// <summary>Refference to the model.</summary>
+        /// <summary>Reference to the model.</summary>
         private static readonly BotModel mdl = BotModel.Instance;
 
         /// <summary>Process the config file. Can also Initialise a fresh file if <see cref="mdl.bCreateFreshConfig"/>.</summary>
@@ -58,7 +74,7 @@ namespace Forebot2
 
             }
 
-            Console.WriteLine("Complated: Processing Config File");
+            Console.WriteLine("Completed: Processing Config File");
             return true;//if we have reached this point, then the config file is valid.
         }
 
@@ -95,13 +111,43 @@ namespace Forebot2
                 return false;//If the split length is not 2, then this line is invalid.
             }
 
-            switch (lineFromFile)
-            {
-                case "test":
-                    break;
-            }
+            string key = splitLine[0];
+            string value = splitLine[1];            
 
-            //ToDo: read in the config file and store values in model.
+            switch (key)//Switch the KEY.
+            {
+                case KEY_BOT_TOKEN:
+                    Console.WriteLine("\t\tSetting the Bot Token to: " + value);
+                    mdl.Bot.Token = value;
+                    Console.WriteLine("\t\tBot Token set to:" + mdl.Bot.Token);
+                    break;
+
+                case KEY_DATABASE_ADDRESS:
+                    Console.WriteLine("\t\tSetting the Database Address to: " + value);
+                    mdl.Database.Address = value;
+                    Console.WriteLine("\t\tDatabase Address set to:" + mdl.Database.Address);
+                    break;
+
+                case KEY_DATABASE_NAME:
+                    Console.WriteLine("\t\tSetting the Database Name to: " + value);
+                    mdl.Database.Name = value;
+                    Console.WriteLine("\t\tDatabase Name set to:" + mdl.Database.Name);
+                    break;
+
+                case KEY_DATABASE_USERNAME:
+                    Console.WriteLine("\t\tSetting the Database Username to: " + value);
+                    mdl.Database.Username = value;
+                    Console.WriteLine("\t\tDatabase Username set to:" + mdl.Database.Username);
+                    break;
+
+                case KEY_DATABASE_PASSWORD:
+                    Console.WriteLine("\t\tSetting the Database Password to: " + value);
+                    mdl.Database.Password = value;
+                    Console.WriteLine("\t\tDatabase Password set to:" + mdl.Database.Password);
+                    break;
+
+
+            }
             //If a config line is invalid return false.
             return true;
         }
@@ -122,15 +168,17 @@ namespace Forebot2
                 sw.WriteLine(COMMENT_CHAR + " Please do not change the values in front of the '='.");
                 sw.WriteLine("");
                 sw.WriteLine(COMMENT_CHAR + " Bot Set-up:");
-                sw.WriteLine("BOT_TOKEN =           Token Here");
+                sw.WriteLine(KEY_BOT_TOKEN + " =           Token Here");
                 sw.WriteLine("");
                 sw.WriteLine("# Database Set-up:");
-                sw.WriteLine("DATABASE_ADDRESS =    localhost");
-                sw.WriteLine("DATABASE_NAME =       Name Here");
-                sw.WriteLine("DATABASE_USERNAME =   Username here");
-                sw.WriteLine("DATABASE_PASSWORD =   Password here");
+                sw.WriteLine(KEY_DATABASE_ADDRESS + "=    localhost");
+                sw.WriteLine(KEY_DATABASE_NAME + "=       Name Here");
+                sw.WriteLine(KEY_DATABASE_USERNAME + "=   Username here");
+                sw.WriteLine(KEY_DATABASE_PASSWORD + "=   Password here");
             }
             Console.WriteLine("\tFresh Config file created");
         }
+
+
     }
 }
