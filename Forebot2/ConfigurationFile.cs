@@ -6,10 +6,13 @@ namespace Forebot2
 {
     public class ConfigurationFile
     {
+        private const string LOGGER_SOURCE = "Config";
 
         #region Key Constants for Key-Value pairs
         /// <summary>Key for the Bot Token.</summary>
         private const string KEY_BOT_TOKEN = "BOT_TOKEN";
+        /// <summary>Key for the initial log level of the bot.</summary>
+        private const string KEY_LOG_LEVEL = "LOG_LEVEL";
 
         /// <summary>Key for the Database Address.</summary>
         private const string KEY_DATABASE_ADDRESS = "DATABASE_ADDRESS";
@@ -41,13 +44,16 @@ namespace Forebot2
         /// <returns>TRUE if a valid config file, FALSE otherwise.</returns>
         public static bool ProcessConfigFile()
         {
-            Console.WriteLine("Starting: Processing Config File......");
-            Console.WriteLine("\tLocation: " + FullPath);
+
+            ApplicationLogger.Log("Starting: Processing Config File......", LOGGER_SOURCE, LOG_SEVERITY.INFO);
+            ApplicationLogger.Log("Location: " + FullPath, LOGGER_SOURCE, LOG_SEVERITY.VERBOSE);
 
             if (!File.Exists(FullPath))//If the config file does not exist...
             {
-                Console.WriteLine("\tConfig file does not exist");
+                ApplicationLogger.Log("Config file does not exist", LOGGER_SOURCE, LOG_SEVERITY.WARNING);
                 InitialiseFreshConfigfile(); //Initialise a fresh one.
+                ApplicationLogger.Log("Please complete the Configuration file at: " + FullPath, LOGGER_SOURCE, LOG_SEVERITY.ERROR);
+                return false;// return false because the config file has just been created and isn't valid in its initialised state.
             }
 
             string[] sLinesFromFile;
@@ -57,22 +63,21 @@ namespace Forebot2
             }
             catch (Exception e)
             {
-                Console.Write("Exception when reading configuration file: " + e.Message);
+                ApplicationLogger.Log("Exception when reading configuration file: " + e.Message, LOGGER_SOURCE, LOG_SEVERITY.ERROR);                
                 return false;
             }
 
             for (int i = 0; i < sLinesFromFile.Length; i++)
             {
-                Console.WriteLine("\tProcessing line [" + i + "]: " + sLinesFromFile[i]);
+                ApplicationLogger.Log("Processing line [" + i + "]: " + sLinesFromFile[i], LOGGER_SOURCE, LOG_SEVERITY.VERBOSE);                
                 if (!ProcessLine(sLinesFromFile[i])) //If the line isn't valid, return false.
                 {
-                    Console.WriteLine("\tLine Invalid");
+                    ApplicationLogger.Log("Line Invalid: " + i, LOGGER_SOURCE, LOG_SEVERITY.WARNING);                    
                     return false;
                 }
 
             }
-
-            Console.WriteLine("Completed: Processing Config File");
+            ApplicationLogger.Log("Completed: Processing Config File", LOGGER_SOURCE, LOG_SEVERITY.VERBOSE);            
             return true;//if we have reached this point, then the config file is valid.
         }
 
@@ -90,13 +95,13 @@ namespace Forebot2
 
             if (lineFromFile.Length == 0)//if the line is blank, "".
             {
-                Console.WriteLine("\t\tBlank line found - ignoring...");
+                ApplicationLogger.Log("Blank line found - ignoring...", LOGGER_SOURCE, LOG_SEVERITY.VERBOSE);                
                 return true; //Return true, as a blank line is valid.
             }
 
             if (lineFromFile[0] == COMMENT_CHAR) //Check if the line is a comment.
             {
-                Console.WriteLine("\t\tCommented line found - ignoring...");
+                ApplicationLogger.Log("Commented line found - ignoring...", LOGGER_SOURCE, LOG_SEVERITY.VERBOSE);                
                 return true; //Return true, as a commented line is a valid line.
             }
 
@@ -105,46 +110,66 @@ namespace Forebot2
 
             if (splitLine.Length != 2)
             {
-                Console.WriteLine("\t\tSplit length not valid,required: 2,  actual: " + splitLine.Length);
+                ApplicationLogger.Log("Split length not valid, required: 2,  actual: " + splitLine.Length, LOGGER_SOURCE, LOG_SEVERITY.WARNING);
                 return false;//If the split length is not 2, then this line is invalid.
             }
 
-            string key = splitLine[0];
-            string value = splitLine[1];            
+            string key = splitLine[0].Trim();
+            string value = splitLine[1].Trim();
 
             switch (key)//Switch the KEY.
             {
                 case KEY_BOT_TOKEN:
-                    Console.WriteLine("\t\tSetting the Bot Token to: " + value);
+                    ApplicationLogger.Log("Setting Bot Token: " + value, LOGGER_SOURCE, LOG_SEVERITY.VERBOSE);
                     mdl.Bot.Token = value;
-                    Console.WriteLine("\t\tBot Token set to:" + mdl.Bot.Token);
+                    ApplicationLogger.Log("Bot Token set to:" + mdl.Bot.Token, LOGGER_SOURCE, LOG_SEVERITY.VERBOSE);
+                    break;
+
+                case KEY_LOG_LEVEL:
+                    LOG_SEVERITY ll = LOG_SEVERITY.DEBUG;
+                    try
+                    {
+                        ll = (LOG_SEVERITY)int.Parse(value);
+                    }
+                    catch (Exception ex)
+                    {
+                        ApplicationLogger.Log("Value not in correct format: " + ex.Message, LOGGER_SOURCE, LOG_SEVERITY.WARNING);
+                        return false;
+                    }
+
+
+                    ApplicationLogger.Log("Setting Bot Log Level: " + ll, LOGGER_SOURCE, LOG_SEVERITY.VERBOSE);
+                    mdl.Bot.Severity = ll;
+                    ApplicationLogger.Log("Bot Log Level set to:" + mdl.Bot.Severity, LOGGER_SOURCE, LOG_SEVERITY.VERBOSE);
                     break;
 
                 case KEY_DATABASE_ADDRESS:
-                    Console.WriteLine("\t\tSetting the Database Address to: " + value);
+                    ApplicationLogger.Log("Setting Database Address: " + value, LOGGER_SOURCE, LOG_SEVERITY.VERBOSE);
                     mdl.Database.Address = value;
-                    Console.WriteLine("\t\tDatabase Address set to:" + mdl.Database.Address);
+                    ApplicationLogger.Log("Database Address set to:" + mdl.Database.Address, LOGGER_SOURCE, LOG_SEVERITY.VERBOSE);
                     break;
 
                 case KEY_DATABASE_NAME:
-                    Console.WriteLine("\t\tSetting the Database Name to: " + value);
+                    ApplicationLogger.Log("Setting Database Name: " + value, LOGGER_SOURCE, LOG_SEVERITY.VERBOSE);
                     mdl.Database.Name = value;
-                    Console.WriteLine("\t\tDatabase Name set to:" + mdl.Database.Name);
+                    ApplicationLogger.Log("Database Name set to:" + mdl.Database.Name, LOGGER_SOURCE, LOG_SEVERITY.VERBOSE);
                     break;
 
                 case KEY_DATABASE_USERNAME:
-                    Console.WriteLine("\t\tSetting the Database Username to: " + value);
+                    ApplicationLogger.Log("Setting Database Username: " + value, LOGGER_SOURCE, LOG_SEVERITY.VERBOSE);
                     mdl.Database.Username = value;
-                    Console.WriteLine("\t\tDatabase Username set to:" + mdl.Database.Username);
+                    ApplicationLogger.Log("Database Username set to:" + mdl.Database.Username, LOGGER_SOURCE, LOG_SEVERITY.VERBOSE);
                     break;
 
                 case KEY_DATABASE_PASSWORD:
-                    Console.WriteLine("\t\tSetting the Database Password to: " + value);
+                    ApplicationLogger.Log("Setting Database Password: " + value, LOGGER_SOURCE, LOG_SEVERITY.VERBOSE);
                     mdl.Database.Password = value;
-                    Console.WriteLine("\t\tDatabase Password set to:" + mdl.Database.Password);
+                    ApplicationLogger.Log("Database Password set to:" + mdl.Database.Password, LOGGER_SOURCE, LOG_SEVERITY.VERBOSE);
                     break;
 
-
+                default:
+                    ApplicationLogger.Log("Unknown key:" + key, LOGGER_SOURCE, LOG_SEVERITY.WARNING);
+                    return false;
             }
             //If a config line is invalid return false.
             return true;
@@ -153,20 +178,27 @@ namespace Forebot2
         /// <summary>Initialise a fresh config file at <see cref="sConfigFilePath"/>.</summary>        
         private static void InitialiseFreshConfigfile()
         {
-            Console.WriteLine("\tCreating Fresh Config File at " + FullPath);
+            ApplicationLogger.Log("Creating Fresh Config File at " + FullPath, LOGGER_SOURCE, LOG_SEVERITY.WARNING);            
             if (!Directory.Exists(Location))// If the directory does not exist...
             {
-                Console.WriteLine("\tConfig Directory Path does not exist: [" + Location + "]");
-                Console.WriteLine("\tCreating Directory... ");
+                ApplicationLogger.Log("tConfig Directory Path does not exist: [" + Location + "] - Creating Directory...", LOGGER_SOURCE, LOG_SEVERITY.WARNING);
                 Directory.CreateDirectory(Location);// ...Create it
             }
             using (StreamWriter sw = File.CreateText(FullPath))// Create a fresh config file template (will also overwrite if one already exists)
             {
                 sw.WriteLine(COMMENT_CHAR + " Any lines that start with '" + COMMENT_CHAR + "' will be ignored");
                 sw.WriteLine(COMMENT_CHAR + " Please do not change the values in front of the '='.");
+                sw.WriteLine(COMMENT_CHAR + "Any log level k-v are represented as an integer: " +
+                    LOG_SEVERITY.DEBUG + " = " + LOG_SEVERITY.DEBUG.GetHashCode() + "  -> " +
+                    LOG_SEVERITY.VERBOSE + " = " + LOG_SEVERITY.VERBOSE.GetHashCode() + "  -> " +
+                    LOG_SEVERITY.INFO + " = " + LOG_SEVERITY.INFO.GetHashCode() + "  -> " +
+                    LOG_SEVERITY.WARNING + " = " + LOG_SEVERITY.WARNING.GetHashCode() + "  -> " +
+                    LOG_SEVERITY.ERROR + " = " + LOG_SEVERITY.ERROR.GetHashCode() + "  -> " +
+                    LOG_SEVERITY.CRITICAL + " = " + LOG_SEVERITY.CRITICAL.GetHashCode() + ".");
                 sw.WriteLine("");
                 sw.WriteLine(COMMENT_CHAR + " Bot Set-up:");
                 sw.WriteLine(KEY_BOT_TOKEN + " =           Token Here");
+                sw.WriteLine(KEY_LOG_LEVEL + " =           " + LOG_SEVERITY.DEBUG.GetHashCode());                
                 sw.WriteLine("");
                 sw.WriteLine("# Database Set-up:");
                 sw.WriteLine(KEY_DATABASE_ADDRESS + "=    localhost");
@@ -174,7 +206,7 @@ namespace Forebot2
                 sw.WriteLine(KEY_DATABASE_USERNAME + "=   Username here");
                 sw.WriteLine(KEY_DATABASE_PASSWORD + "=   Password here");
             }
-            Console.WriteLine("\tFresh Config file created");
+            ApplicationLogger.Log("Fresh Config file created", LOGGER_SOURCE, LOG_SEVERITY.INFO);            
         }
 
 

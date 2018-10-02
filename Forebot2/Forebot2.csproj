@@ -3,8 +3,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <AssemblyVersion>1.0.0.9</AssemblyVersion>
-    <FileVersion>1.0.0.9</FileVersion>
+    <AssemblyVersion>1.0.0.10</AssemblyVersion>
+    <FileVersion>1.0.0.10</FileVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <NoWin32Manifest>true</NoWin32Manifest>
     <NeutralLanguage>en-GB</NeutralLanguage>
@@ -26,7 +26,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Discord\" />
+    <PackageReference Include="Discord.Net" Version="2.0.0-beta" />
   </ItemGroup>
 
 </Project>

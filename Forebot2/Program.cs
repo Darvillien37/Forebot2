@@ -9,42 +9,54 @@ namespace Forebot2
     class Program
     {
         /// <summary>Reference to the Model Root of this application.</summary>
-        private static readonly BotModel mdl = BotModel.Instance;
+        private static readonly BotModel mdl = BotModel.Instance;        
 
         /// <summary>Get the Build Version of the program.</summary>
         public static string BuildVersion { get { return Assembly.GetExecutingAssembly().GetName().Version.ToString(); } }
+        /// <summary>Get the process name of this application.</summary>
+        public static string ProcessName { get { return Process.GetCurrentProcess().ProcessName; } }
 
-     
 
         /// <summary>The main starting point of any application.</summary>
         /// <remarks>If you had to read this to figure out what main is.....git gud scrub.</remarks>
         /// <param name="args">Arguments passed in to the application, from the command line, or shortcut.</param>
         static void Main(string[] args)
-        {
+        {             
             PrintApplicationInfo();//Print the application info.
 
             //Check if this application is already running...
             if (IsApplicationAlreadyRunning())
             {//...if it is, shut this instance down.
-                Console.WriteLine("Only one instance of " + Process.GetCurrentProcess().ProcessName + " Can be run a a time.");
-                Console.WriteLine("Shutting down this instance ... Goodbye!!");
+                ApplicationLogger.Log(
+                    "Only one instance of " + ProcessName + " Can be run a a time.",
+                    "MAIN",
+                    LOG_SEVERITY.ERROR
+                    );
+                ApplicationLogger.Log(
+                    "Shutting down this instance ... Goodbye!!",
+                    "MAIN",
+                    LOG_SEVERITY.CRITICAL
+                    );
                 return; //returning in main exits the application.
             }
 
             //Initialising:
             ProcessArgs(args);
-            Console.WriteLine();
 
             if (!ConfigurationFile.ProcessConfigFile())//Will return false if a config line is invalid.
             {
-                Console.WriteLine("WARNING - Configuration file is invalid, shutting down.");
-                Console.ReadKey();
+                ApplicationLogger.Log("Configuration file is invalid, shutting down", "MAIN", LOG_SEVERITY.CRITICAL);
                 return;
             }
 
 
 
-            Console.WriteLine("Hello World!");
+            ApplicationLogger.Log("Test", "Testing", LOG_SEVERITY.DEBUG);
+            ApplicationLogger.Log("Test", "Testing", LOG_SEVERITY.VERBOSE);
+            ApplicationLogger.Log("Test", "Testing", LOG_SEVERITY.INFO);
+            ApplicationLogger.Log("Test", "Testing", LOG_SEVERITY.WARNING);
+            ApplicationLogger.Log("Test", "Testing", LOG_SEVERITY.ERROR);
+            ApplicationLogger.Log("Test", "Testing", LOG_SEVERITY.CRITICAL);
 
             Console.ReadKey();
 
@@ -54,7 +66,10 @@ namespace Forebot2
         static private void PrintApplicationInfo()
         {
             AssemblyName aName = Assembly.GetExecutingAssembly().GetName();
-            Console.WriteLine("Running: " + aName.Name + "  V" + aName.Version.ToString());
+            ApplicationLogger.Log(
+                "Running: " + aName.Name + "  V" + aName.Version.ToString(),
+                "Initialisation",
+                LOG_SEVERITY.INFO);
         }
 
         /// <summary>Check if this application is already running.</summary>
@@ -72,7 +87,7 @@ namespace Forebot2
         /// <param name="args">Arguments passed in to the application.</param>
         private static void ProcessArgs(string[] args)
         {
-            Console.WriteLine("Starting: Processing Arguments.....");
+            ApplicationLogger.Log("Starting: Processing Arguments.....", "Args", LOG_SEVERITY.INFO);
             if (args == null)//if the array is null, throw an exception.
             {
                 throw new ArgumentNullException("args", "Parameter contains null array.");
@@ -80,18 +95,18 @@ namespace Forebot2
 
             if (args.Length == 0)
             {
-                Console.WriteLine("\tNo Arguments, setting to config path to '" + ConfigurationFile.FullPath + "'.");
+                ApplicationLogger.Log("No Arguments, setting to config path to '" + ConfigurationFile.FullPath + "'.", "Args", LOG_SEVERITY.WARNING);
                 //file path is already defaulted to local directory.
             }
             else
             {
                 string arg = args[0];
-                Console.WriteLine("\tProcessing Argument 1: " + arg + ".");
-                Console.WriteLine("\tSetting to config directory to '" + arg + "'.");
+                ApplicationLogger.Log("Processing Argument 1: " + arg + ".", "Args", LOG_SEVERITY.VERBOSE);
+                ApplicationLogger.Log("Setting to config directory to '" + arg + "'.", "Args", LOG_SEVERITY.VERBOSE);
                 ConfigurationFile.Location = arg;
-                Console.WriteLine("\tConfig path set to '" + ConfigurationFile.FullPath + "'.");
+                ApplicationLogger.Log("Config path set to '" + ConfigurationFile.FullPath + "'.", "Args", LOG_SEVERITY.VERBOSE);
             }
-            Console.WriteLine("Complated: Arguments Processing");
+            ApplicationLogger.Log("Completed: Arguments Processing", "Args", LOG_SEVERITY.INFO);
         }
 
     }

@@ -53,6 +53,9 @@ namespace Forebot2.Model
             }
         }
 
+        /// <summary>The severity level of the discord bot.</summary>
+        public LOG_SEVERITY Severity { get; set; } = LOG_SEVERITY.DEBUG;
+
         public BotData()
         { }
     }
