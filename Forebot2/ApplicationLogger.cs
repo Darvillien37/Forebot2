@@ -28,7 +28,7 @@ namespace Forebot2
     /// all implemented modules should use <see cref="Log(string, string, LOG_SEVERITY)"/> when wanting to Log issues to the console.</summary>
     public class ApplicationLogger
     {
-        /// <summary>Log the Message to the logger.</summary>
+        /// <summary>Write a Message to the logger.</summary>
         /// <param name="msg">The message contents.</param>
         /// <param name="source">The origin of the message.</param>
         /// <param name="severity">The severity of the message.<param>
