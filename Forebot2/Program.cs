@@ -1,7 +1,9 @@
-﻿using Forebot2.Model;
+﻿using Forebot2.Discord;
+using Forebot2.Model;
 using System;
 using System.Diagnostics;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Forebot2
 {
@@ -9,7 +11,7 @@ namespace Forebot2
     class Program
     {
         /// <summary>Reference to the Model Root of this application.</summary>
-        private static readonly BotModel mdl = BotModel.Instance;        
+        private static readonly BotModel mdl = BotModel.Instance;
 
         /// <summary>Get the Build Version of the program.</summary>
         public static string BuildVersion { get { return Assembly.GetExecutingAssembly().GetName().Version.ToString(); } }
@@ -20,8 +22,8 @@ namespace Forebot2
         /// <summary>The main starting point of any application.</summary>
         /// <remarks>If you had to read this to figure out what main is.....git gud scrub.</remarks>
         /// <param name="args">Arguments passed in to the application, from the command line, or shortcut.</param>
-        static void Main(string[] args)
-        {             
+        static async Task Main(string[] args)
+        {
             PrintApplicationInfo();//Print the application info.
 
             //Check if this application is already running...
@@ -37,6 +39,7 @@ namespace Forebot2
                     "MAIN",
                     LOG_SEVERITY.CRITICAL
                     );
+                Console.ReadKey();
                 return; //returning in main exits the application.
             }
 
@@ -46,10 +49,13 @@ namespace Forebot2
             if (!ConfigurationFile.ProcessConfigFile())//Will return false if a config line is invalid.
             {
                 ApplicationLogger.Log("Configuration file is invalid, shutting down", "MAIN", LOG_SEVERITY.CRITICAL);
+                Console.ReadKey();
                 return;
             }
 
 
+            Connection DiscordConnection = new Connection(DConfigFactory.Generate(mdl.Bot.Severity));
+            await DiscordConnection.ConnectAsync(mdl.Bot.Token);
 
             ApplicationLogger.Log("Test", "Testing", LOG_SEVERITY.DEBUG);
             ApplicationLogger.Log("Test", "Testing", LOG_SEVERITY.VERBOSE);

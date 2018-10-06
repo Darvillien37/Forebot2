@@ -49,6 +49,11 @@ namespace Forebot2.Model
                 {
                     _sToken = value; //Set the token.
                     _bCanChangeToken = false; //And set the flag to not be able to set it again.
+                    ApplicationLogger.Log("BotToken set to: " + _sToken + " : No longer able to change", "BotData.Token", LOG_SEVERITY.WARNING);
+                }
+                else
+                {
+                    ApplicationLogger.Log("Unable to set Bot Token, Token was set to: " + _sToken, "BotData.Token", LOG_SEVERITY.WARNING);
                 }
             }
         }
