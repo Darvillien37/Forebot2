@@ -9,6 +9,7 @@ dotnet_csproj:
 build_script:
     dotnet build -c Release
 test_script:
+<<<<<<< HEAD
     ps: >-
         nuget install xunit.runner.console -OutputDirectory packages -Version 2.3.1
         
@@ -25,3 +26,6 @@ test_script:
         
     
     
+=======
+    dotnet test xUnitTesting\xUnitTesting.csproj
+>>>>>>> parent of 0e24b52... sett up apveyor test coverage
