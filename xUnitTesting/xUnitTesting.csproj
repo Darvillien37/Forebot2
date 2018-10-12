@@ -1,13 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-<<<<<<< HEAD
-    <TargetFramework>netcoreapp2.0</TargetFramework>
-    <DebugType>full</DebugType>
-=======
+    <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-
->>>>>>> parent of 0e24b52... sett up apveyor test coverage
+    <DebugType>full</DebugType>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
