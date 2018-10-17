@@ -28,12 +28,20 @@ namespace Forebot2
     /// all implemented modules should use <see cref="Log(string, string, LOG_SEVERITY)"/> when wanting to Log issues to the console.</summary>
     public class ApplicationLogger
     {
+
         /// <summary>Write a Message to the logger.</summary>
         /// <param name="msg">The message contents.</param>
         /// <param name="source">The origin of the message.</param>
-        /// <param name="severity">The severity of the message.<param>
+        /// <param name="severity">The severity of the message.<param>        
         public static void Log(string msg, string source, LOG_SEVERITY severity)
         {
+            if (msg == null)
+                throw new ArgumentNullException("msg", "The message string cannot be null");
+
+            if (source == null)
+                throw new ArgumentNullException("source", "The source string cannot be null");
+            
+
             var c = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.White;
 
