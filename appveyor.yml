@@ -16,7 +16,7 @@ test_script:
         
         dotnet tool install coveralls.net --version 1.0.0 --tool-path tools
         
-        .\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -target:"C:\Program Files\dotnet\dotnet.exe" "-targetargs:"".\packages\xunit.runner.console.2.3.1\tools\netcoreapp2.0\xunit.console.dll"" ""C:\projects\forebot2\Release\xUnitTests\netcoreapp2.0\xUnitTesting.dll"" -noshadow -appveyor" -filter:"+[*]* -[*]xUnitTesting.*" -oldStyle -output:opencoverCoverage.xml
+        .\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -target:"C:\Program Files\dotnet\dotnet.exe" "-targetargs:"".\packages\xunit.runner.console.2.3.1\tools\netcoreapp2.0\xunit.console.dll"" ""C:\projects\Forebot2\xUnitTesting\bin\Release\netcoreapp2.0\xUnitTesting.dll"" -noshadow -appveyor" -filter:"+[*]* -[*]xUnitTesting.*" -oldStyle -output:opencoverCoverage.xml
         
         $coveralls = ".\tools\csmacnz.coveralls.exe"
         
