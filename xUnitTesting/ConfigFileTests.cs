@@ -8,7 +8,7 @@ namespace xUnitTesting
     public class ConfigFileTests
     {
 
-        private const string TESTING_CONFIG_DIRECTORY = @"..\..\..\ConfigFileTesting";
+        private const string TESTING_CONFIG_DIRECTORY = @".\ConfigFileTesting";
 
         [Fact]
         public void PropertiesTests()
