@@ -71,16 +71,6 @@ namespace xUnitTesting
 
         }
 
-        [Fact]
-        public void ValidFileTest()
-        {
-            string TestingDirectory = TESTING_CONFIG_DIRECTORY + @"\ValidFileTest";
-            ConfigurationFile.Location = TestingDirectory;
-            //Confirm that an already valid file exists for this test:            
-            Assert.True(File.Exists(ConfigurationFile.FullPath));
-
-            //Confirm that the file has been processed correctly:
-            Assert.True(ConfigurationFile.ProcessConfigFile(), "Processing was not correct");
-        }
+       //Cannot test a valid file(don't know how)
     }
 }

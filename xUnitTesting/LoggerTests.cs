@@ -25,7 +25,7 @@ namespace xUnitTesting
             mockConsole = new StringWriter();
             originalOutput = Console.Out;
             Console.SetOut(mockConsole);
-        }      
+        }
 
         /// <summary>
         /// Get the output of the console.
@@ -84,7 +84,7 @@ namespace xUnitTesting
                 Assert.NotNull(actual);
                 Assert.Equal(expected, actual);
             }
-         
+
         }
 
     }
