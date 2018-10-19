@@ -2,6 +2,7 @@ using Forebot2;
 using System;
 using System.IO;
 using Xunit;
+[assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly)]
 
 namespace xUnitTesting
 {
