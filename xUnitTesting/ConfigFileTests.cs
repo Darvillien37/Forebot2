@@ -9,6 +9,7 @@ namespace xUnitTesting
     {
         private const string TESTING_CONFIG_DIRECTORY = @".\ConfigFileTesting";
 
+        private const char COMMENT_CHAR = '#';
         private const string KEY_BOT_TOKEN = "BOT_TOKEN";
         private const string KEY_LOG_LEVEL = "LOG_LEVEL";
         private const string KEY_DATABASE_ADDRESS = "DATABASE_ADDRESS";
@@ -94,11 +95,28 @@ namespace xUnitTesting
         {
             //Save the original to set it back.
             string originalDirectory = ConfigurationFile.Location;
-
+            
             string testingDirectory = TESTING_CONFIG_DIRECTORY + @"\ValidFileTest";
-            ConfigurationFile.Location = testingDirectory;
+            string path = Path.Combine(testingDirectory, ConfigurationFile.Name);
 
-            Assert.True(ConfigurationFile.ProcessConfigFile(), "Failed: The file was not processed correctly.");
+            Directory.CreateDirectory(testingDirectory);// Create the directory if it doesn't exist.
+            ConfigurationFile.Location = testingDirectory;
+            
+            //write a valid file:
+            using (StreamWriter sw = File.CreateText(path))//Create a custom invalid file
+            {
+                sw.WriteLine(COMMENT_CHAR + "A Commented Line");
+                sw.WriteLine();//A blank line.
+                sw.WriteLine("   ");//A line with spaces.                
+                sw.WriteLine(KEY_BOT_TOKEN + " =           Token Here");
+                sw.WriteLine(KEY_LOG_LEVEL + " =           " + LOG_SEVERITY.DEBUG.GetHashCode());
+                sw.WriteLine(KEY_DATABASE_ADDRESS + "=    localhost");
+                sw.WriteLine(KEY_DATABASE_NAME + "=       Name Here");
+                sw.WriteLine(KEY_DATABASE_USERNAME + "=   Username here");
+                sw.WriteLine(KEY_DATABASE_PASSWORD + "=   Password here");
+            }
+
+            Assert.True(ConfigurationFile.ProcessConfigFile(), "Failed: ValidFileTest, file not processed correctly");
 
             //Set back to the original location.
             ConfigurationFile.Location = originalDirectory;
