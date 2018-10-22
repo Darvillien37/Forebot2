@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Forebot2\Forebot2.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ConfigFileTesting\" />
+  </ItemGroup>
+
 </Project>

@@ -40,7 +40,7 @@ namespace Forebot2
         /// <summary>Reference to the model.</summary>
         private static readonly BotModel mdl = BotModel.Instance;
 
-        /// <summary>Process the config file. Can also Initialise a fresh file if <see cref="mdl.bCreateFreshConfig"/>.</summary>
+        /// <summary>Process the config file. Can also Initialise a fresh file if it doesn't exist.</summary>
         /// <returns>TRUE if a valid config file, FALSE otherwise.</returns>
         public static bool ProcessConfigFile()
         {
@@ -88,7 +88,7 @@ namespace Forebot2
         {
             if (lineFromFile == null)
             {
-                throw new ArgumentNullException("lineFromFile", "Should not be null");
+                lineFromFile = "";
             }
 
             lineFromFile = lineFromFile.Trim(); //Remove the spaces from the start and end of the line.

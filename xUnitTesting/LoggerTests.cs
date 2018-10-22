@@ -2,7 +2,7 @@ using Forebot2;
 using System;
 using System.IO;
 using Xunit;
-[assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly)]
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
 
 namespace xUnitTesting
 {
@@ -49,7 +49,7 @@ namespace xUnitTesting
 
     public class LoggerTests
     {
-        [Fact]
+        [Fact]        
         public void BasicLoggerTest()
         {
             Assert.Throws<ArgumentNullException>(() =>
