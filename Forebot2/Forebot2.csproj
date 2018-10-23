@@ -4,8 +4,8 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>    
     <DebugType>full</DebugType>
-    <AssemblyVersion>1.0.0.13</AssemblyVersion>
-    <FileVersion>1.0.0.13</FileVersion>
+    <AssemblyVersion>1.0.0.14</AssemblyVersion>
+    <FileVersion>1.0.0.14</FileVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <NoWin32Manifest>true</NoWin32Manifest>
     <NeutralLanguage>en-GB</NeutralLanguage>

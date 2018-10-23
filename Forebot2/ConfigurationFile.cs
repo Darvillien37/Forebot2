@@ -127,17 +127,24 @@ namespace Forebot2
 
                 case KEY_LOG_LEVEL:
                     LOG_SEVERITY ll = LOG_SEVERITY.DEBUG;
-                    try
+
+                    int iValue = 0;
+                    if (!int.TryParse(value, out iValue))//If the value is not an integer....
                     {
-                        ll = (LOG_SEVERITY)int.Parse(value);
-                    }
-                    catch (Exception ex)
-                    {
-                        ApplicationLogger.Log("Value not in correct format: " + ex.Message, LOGGER_SOURCE, LOG_SEVERITY.WARNING);
-                        return false;
+                        ApplicationLogger.Log("Value [" + value + "] not an integer.", LOGGER_SOURCE, LOG_SEVERITY.WARNING);
+                        return false;//the key-value is invalid
                     }
 
-
+                    if (Enum.IsDefined(typeof(LOG_SEVERITY), iValue))//if the value is not defined in the enum....
+                    {
+                        ll = (LOG_SEVERITY)iValue;
+                    }
+                    else
+                    {
+                        ApplicationLogger.Log("Value [" + value + "] not defined in Log_Level.", LOGGER_SOURCE, LOG_SEVERITY.WARNING);
+                        return false;//The key-value pair is not valid
+                    }
+                    
                     ApplicationLogger.Log("Setting Bot Log Level: " + ll, LOGGER_SOURCE, LOG_SEVERITY.VERBOSE);
                     mdl.Bot.Severity = ll;
                     ApplicationLogger.Log("Bot Log Level set to:" + mdl.Bot.Severity, LOGGER_SOURCE, LOG_SEVERITY.VERBOSE);

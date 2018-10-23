@@ -19,7 +19,7 @@ namespace xUnitTesting
 
         [Fact]
         public void PropertiesTests()
-        {   
+        {
             //Save the original to set it back.
             string originalDirectory = ConfigurationFile.Location;
             //Set the expected values.
@@ -41,7 +41,7 @@ namespace xUnitTesting
             actual = ConfigurationFile.FullPath;
             Assert.NotNull(actual);
             Assert.Equal(expectedDefaultPath, actual);
-            
+
             //---------------------- Change the properties and test them -----------------------------
             string expectedDirectory = @"F:\";
             string expectedPath = Path.Combine(expectedDirectory, ConfigurationFile.Name);
@@ -95,13 +95,13 @@ namespace xUnitTesting
         {
             //Save the original to set it back.
             string originalDirectory = ConfigurationFile.Location;
-            
+
             string testingDirectory = TESTING_CONFIG_DIRECTORY + @"\ValidFileTest";
             string path = Path.Combine(testingDirectory, ConfigurationFile.Name);
 
             Directory.CreateDirectory(testingDirectory);// Create the directory if it doesn't exist.
             ConfigurationFile.Location = testingDirectory;
-            
+
             //write a valid file:
             using (StreamWriter sw = File.CreateText(path))//Create a custom invalid file
             {
@@ -127,36 +127,55 @@ namespace xUnitTesting
             const string TESTING_DIRECTORY = TESTING_CONFIG_DIRECTORY + @"\InvalidKeyValueTest";
 
 
-            [Fact]
-            public void InvalidLogLevel()
+            [Theory]
+            [InlineData(-1)]
+            [InlineData(-10)]
+            [InlineData(10)]
+            public void InvalidLogLevel_Integer(int iLevel)
             {
-                //Save the original to set it back.
+                //Save the original path to set it back later.
                 string originalDirectory = ConfigurationFile.Location;
 
                 string path = Path.Combine(TESTING_DIRECTORY, ConfigurationFile.Name);
                 Directory.CreateDirectory(TESTING_DIRECTORY);// Create the directory if it doesn't exist.
                 ConfigurationFile.Location = TESTING_DIRECTORY;
 
-                //Test with more than 1 equals.
                 using (StreamWriter sw = File.CreateText(path))//Create a custom invalid file
                 {
-                    sw.WriteLine("KEY_LOG_LEVEL = -1");
+                    sw.WriteLine(KEY_LOG_LEVEL + " = " + iLevel);
                 }
                 Assert.True(File.Exists(path), "Failed: File not created");
-                Assert.False(ConfigurationFile.ProcessConfigFile(), "Failed: KEY_LOG_LEVEL = -1.");
-
-
-                //Test with more than 1 equals.
-                using (StreamWriter sw = File.CreateText(path))//Create a custom invalid file
-                {
-                    sw.WriteLine("KEY_LOG_LEVEL = 10");
-                }
-                Assert.True(File.Exists(path), "Failed: File not created");
-                Assert.False(ConfigurationFile.ProcessConfigFile(), "Failed: KEY_LOG_LEVEL = -1.");
+                Assert.False(ConfigurationFile.ProcessConfigFile(), "Failed: " + KEY_LOG_LEVEL + " = " + iLevel);
 
                 //Set back to the original location
-                 ConfigurationFile.Location = originalDirectory;
+                ConfigurationFile.Location = originalDirectory;
 
+            }
+
+            [Theory]
+            [InlineData("Hello")]
+            [InlineData("World")]
+            [InlineData("ten")]
+            [InlineData("one")]
+            [InlineData("-one")]
+            public void InvalidLogLevel_String(string sLevel)
+            {
+                //Save the original path to set it back later.
+                string originalDirectory = ConfigurationFile.Location;
+
+                string path = Path.Combine(TESTING_DIRECTORY, ConfigurationFile.Name);
+                Directory.CreateDirectory(TESTING_DIRECTORY);// Create the directory if it doesn't exist.
+                ConfigurationFile.Location = TESTING_DIRECTORY;
+
+                using (StreamWriter sw = File.CreateText(path))//Create a custom invalid file
+                {
+                    sw.WriteLine(KEY_LOG_LEVEL + " = " + sLevel);
+                }
+                Assert.True(File.Exists(path), "Failed: File not created");
+                Assert.False(ConfigurationFile.ProcessConfigFile(), "Failed: " + KEY_LOG_LEVEL + " = " + sLevel);
+
+                //Set back to the original location
+                ConfigurationFile.Location = originalDirectory;
             }
 
             //ToDo: more invalid key value pairs
