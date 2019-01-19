@@ -24,48 +24,36 @@ namespace Forebot2
         /// <param name="args">Arguments passed in to the application, from the command line, or shortcut.</param>
         static async Task Main(string[] args)
         {
-            PrintApplicationInfo();//Print the application info.
+            PrintApplicationInfo();//Print the application info to the log
 
             //Check if this application is already running...
-            if (IsApplicationAlreadyRunning())
+            if (ProcessRunningCheck())
             {//...if it is, shut this instance down.
-                ApplicationLogger.Log(
-                    "Only one instance of " + ProcessName + " Can be run a a time.",
-                    "MAIN",
-                    LOG_SEVERITY.ERROR
-                    );
-                ApplicationLogger.Log(
-                    "Shutting down this instance ... Goodbye!!",
-                    "MAIN",
-                    LOG_SEVERITY.CRITICAL
-                    );
+                ApplicationLogger.Log("Only one instance of " + ProcessName + " Can be run a a time.",
+                "ProcessRunningCheck",
+                LOG_SEVERITY.ERROR);
+                ApplicationLogger.Log("Shutting down this instance ... Goodbye!!",
+                    "ProcessRunningCheck",
+                    LOG_SEVERITY.CRITICAL);
                 Console.ReadKey();
                 return; //returning in main exits the application.
             }
 
             //Initialising:
+            //Process the args passed into the program
             ProcessArgs(args);
-
+            //Now process the config file
             if (!ConfigurationFile.ProcessConfigFile())//Will return false if a config line is invalid.
             {
-                ApplicationLogger.Log("Configuration file is invalid, shutting down", "MAIN", LOG_SEVERITY.CRITICAL);
+                ApplicationLogger.Log("Configuration file is invalid, Shutting down", "MAIN", LOG_SEVERITY.WARNING);
                 Console.ReadKey();
                 return;
             }
 
-
             Connection DiscordConnection = new Connection(DConfigFactory.Generate(mdl.Bot.Severity));
             await DiscordConnection.ConnectAsync(mdl.Bot.Token);
 
-            ApplicationLogger.Log("Test", "Testing", LOG_SEVERITY.DEBUG);
-            ApplicationLogger.Log("Test", "Testing", LOG_SEVERITY.VERBOSE);
-            ApplicationLogger.Log("Test", "Testing", LOG_SEVERITY.INFO);
-            ApplicationLogger.Log("Test", "Testing", LOG_SEVERITY.WARNING);
-            ApplicationLogger.Log("Test", "Testing", LOG_SEVERITY.ERROR);
-            ApplicationLogger.Log("Test", "Testing", LOG_SEVERITY.CRITICAL);
-
             Console.ReadKey();
-
         }
 
         /// <summary>Print the application name and version number.</summary>
@@ -80,39 +68,41 @@ namespace Forebot2
 
         /// <summary>Check if this application is already running.</summary>
         /// <returns>TRUE if application is already running, FALSE otherwise</returns>
-        private static bool IsApplicationAlreadyRunning()
+        private static bool ProcessRunningCheck()
         {
             string sProcessName = Process.GetCurrentProcess().ProcessName; //Get the current process name
-            if (Process.GetProcessesByName(sProcessName).Length > 1) //Get a list of all processes running on this machine, that contain this processes name.
-                return true;//If the list is bigger than 1, the 1 being this current process, then the application is already running.
+
+            //Get a list of all processes running on this machine, that contain this processes name.
+            //If the list is bigger than 1, the 1 being this current process, then the application is already running.
+            if (Process.GetProcessesByName(sProcessName).Length > 1)
+                return true;
             else
-                return false;//Otherwise it isn't.
+                return false;
         }
 
         /// <summary>Process the arguments passed in to the application.</summary>
         /// <param name="args">Arguments passed in to the application.</param>
         private static void ProcessArgs(string[] args)
         {
-            ApplicationLogger.Log("Starting: Processing Arguments.....", "Args", LOG_SEVERITY.INFO);
-            if (args == null)//if the array is null, throw an exception.
-            {
-                throw new ArgumentNullException("args", "Parameter contains null array.");
-            }
+            const string LOG_SOURCE = "Args";
+            ApplicationLogger.Log("Starting: Processing Arguments And Config.....", LOG_SOURCE, LOG_SEVERITY.INFO);
 
+            if (args == null)//if the array is null, set it as an empty array.
+                args = new string[] { };
+
+            //If there are no args, then set the default config directory.
             if (args.Length == 0)
-            {
-                ApplicationLogger.Log("No Arguments, setting to config path to '" + ConfigurationFile.FullPath + "'.", "Args", LOG_SEVERITY.WARNING);
-                //file path is already defaulted to local directory.
-            }
+                ApplicationLogger.Log("No Arguments, config file path remains: '" + ConfigurationFile.FullPath + "'.", LOG_SOURCE, LOG_SEVERITY.WARNING);
+            //file path is already defaulted to local directory.            
             else
             {
-                string arg = args[0];
-                ApplicationLogger.Log("Processing Argument 1: " + arg + ".", "Args", LOG_SEVERITY.VERBOSE);
-                ApplicationLogger.Log("Setting to config directory to '" + arg + "'.", "Args", LOG_SEVERITY.VERBOSE);
+                string arg = args[0];//The first arg should be the path to the config file               
+                ApplicationLogger.Log("Setting to config directory to '" + arg + "'.", LOG_SOURCE, LOG_SEVERITY.VERBOSE);
                 ConfigurationFile.Location = arg;
-                ApplicationLogger.Log("Config path set to '" + ConfigurationFile.FullPath + "'.", "Args", LOG_SEVERITY.VERBOSE);
+                ApplicationLogger.Log("Config path set to '" + ConfigurationFile.FullPath + "'.", LOG_SOURCE, LOG_SEVERITY.VERBOSE);
             }
-            ApplicationLogger.Log("Completed: Arguments Processing", "Args", LOG_SEVERITY.INFO);
+
+            ApplicationLogger.Log("Completed: Arguments And Config Processing", LOG_SOURCE, LOG_SEVERITY.INFO);
         }
 
     }
